@@ -1,0 +1,7 @@
+  
+{
+    "IIS-Site-Name": "clean-blog",
+    "App-Pool-Name": "clean-blog",
+    "IIS-App-Pool-Dot-Net-Version": "v4.8",
+    "bindings": ["clean-blog.localtest.me"]
+}

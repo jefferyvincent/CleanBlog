@@ -1,0 +1,57 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+    @{ 
+        var title = Model.HasValue(alias: "title") ? Model.Value(alias: "title") : Model.Name;
+        var subtitle = Model.HasValue(alias: "subtitle") ? Model.Value<string>(alias: "subtitle") : "";
+        var image = Model.Value<IPublishedContent>(alias: "mainImage", fallback: Fallback.ToAncestors); 
+        string imageUrl = "";
+        string smailImageUrl = "";
+        if (image != null)
+        {
+            imageUrl = image.GetCropUrl("PageHeader.Large");
+            smailImageUrl = image.GetCropUrl("PageHeader.Tiny");
+        }
+        var authorName = Model.HasProperty(alias: "authorName") && Model.HasValue(alias:"authorName") ? Model.Value<string>(alias: "authorName") : "";
+        DateTime articleDate = Model.HasProperty(alias: "articleDate") && Model.HasValue(alias: "articleDate") ? Model.Value<DateTime>(alias: "articleDate") : DateTime.MinValue;
+        bool hasAuthorDetials = !string.IsNullOrWhiteSpace(authorName) || articleDate != DateTime.MinValue;
+        }
+
+
+    @* the fun starts here *@
+
+    <!-- Page Header -->
+<header class="masthead lazyload" data-bg="@(!string.IsNullOrWhiteSpace(imageUrl) ? imageUrl : null)" style="@(!string.IsNullOrWhiteSpace(smailImageUrl) ? "background-image: url('" + smailImageUrl + "')": null)">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <div class="site-heading">
+                    <h1> @title</h1>
+                    @if (!string.IsNullOrWhiteSpace(subtitle))
+                    {
+
+                        if (hasAuthorDetials)
+                        {
+                            <h2 class="subheading">@subtitle</h2>
+                        }
+                        else
+                        {
+                            <span class="subheading">@subtitle</span>
+                        }
+
+                    }
+                    @if (hasAuthorDetials)
+                    {
+                        <span class="meta">
+                            Posted
+                            @if (!string.IsNullOrWhiteSpace(authorName))
+                            {
+                                @Html.Raw("by ") @authorName
+                            }
+                            on @articleDate.ToString(format: "MMMM dd, yyyy")
+                        </span>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
